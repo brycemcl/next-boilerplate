@@ -1,0 +1,12 @@
+{
+  "name": "@brycemclachlan/next-boilerplate",
+  "version": "0.1.0",
+  "description": "A blank boilerplate for Next.js framework",
+  "main": "setup.sh",
+  "bin": "./setup.sh",
+  "scripts": {
+    "run": "./setup.sh"
+  },
+  "author": "Bryce McLachlan",
+  "license": "ISC"
+}
