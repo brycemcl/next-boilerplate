@@ -60,7 +60,7 @@ cat <<EOT >jest.setup.ts
 import '@testing-library/jest-dom'
 EOT
 npx sb init
-npm i -D storybook-css-modules-preset
+npm i -D storybook-css-modules-preset @storybook/addon-storyshots
 rm -fr stories
 cat <<EOT >.storybook/main.js
 module.exports = {
@@ -74,6 +74,10 @@ module.exports = {
     'storybook-css-modules-preset',
   ],
 }
+EOT
+cat <<EOT >.storybook/storybook.test.js
+import initStoryshots from '@storybook/addon-storyshots'
+initStoryshots()
 EOT
 
 mkdir components/atoms/SampleTemplate
