@@ -15,11 +15,9 @@ mkdir scr/functions/setters
 mkdir scr/hooks
 
 cat <<EOT >styles/globals.css
-@import '../node_modules/normalize.css/normalize.css';
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-html,
-body {
-  padding: 0;
+* {
+  box-sizing: border-box;
   margin: 0;
   font-family: 'Roboto', sans-serif;
 }
@@ -29,10 +27,10 @@ a {
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
+#__next {
+  min-height: 100vh;
+  min-width: 100vw;
 }
-
 EOT
 cat <<EOT >next.config.js
 module.exports = {
@@ -81,6 +79,7 @@ module.exports = {
 EOT
 cat <<EOT >.storybook/preview.js
 import '../styles/globals.css'
+import 'normalize.css'
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
@@ -104,14 +103,14 @@ mkdir pages
 mkdir pages/api
 cat <<EOT >pages/index.tsx
 import Head from 'next/head'
-const page = ()=> {
+const page = () => {
   return (
     <>
       <Head>
         <title>Change me</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel='icon' href='/favicon.ico' />
+        <meta name='description' content='' />
       </Head>
-
     </>
   )
 }
@@ -130,6 +129,7 @@ export default page
 EOT
 cat <<EOT >pages/_app.tsx
 import '../styles/globals.css'
+import 'normalize.css'
 
 function App({ Component, pageProps }) {
   return <Component {...pageProps} />
@@ -237,7 +237,7 @@ exports.nextServer = functions
     return server.prepare().then(() => nextjsHandle(req, res))
   })
 EOT
-
+npx prettier --write .
 git add .
 git commit -m "Inital boilerplate"
 git branch -M main
