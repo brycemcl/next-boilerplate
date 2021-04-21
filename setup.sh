@@ -177,14 +177,67 @@ const fs = require('fs').promises
 ;(async () => {
   const packageJson = await fs.readFile('./package.json', 'utf8')
   const package = JSON.parse(packageJson)
-  package.scripts.export = 'next export'
+  package.scripts.export = 'next build && next export'
+  package.scripts.deploy = 'npm run export && mkdir firebaseBuild && cp server.js firebaseBuild/index.js && cp server.js firebaseBuild/index.js && cp package*.json firebaseBuild && cp -r .next firebaseBuild && cp -r public firebaseBuild && cross-env NODE_ENV=production firebase deploy --only functions,hosting && rm -fr firebaseBuild'
   package.scripts.test = 'jest --watch'
+  package.main = 'server.js'
   console.log(package)
   await fs.writeFile('./package.json', JSON.stringify(package))
 })()
 EOT
 node changePackageJson.js
 rm changePackageJson.js
+
+echo .firebase >> .gitignore
+npm i firebase-functions
+npm i -D firebase-admin cross-env 
+cat <<EOT >.firebaserc
+{
+  "projects": {
+    "default": "Replace-me"
+  }
+}
+EOT
+cat <<EOT >firebase.json
+{
+  "hosting": {
+    "public": "out",
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "nextServer"
+      }
+    ]
+  },
+  "functions": {
+    "source": "firebaseBuild",
+    "runtime": "nodejs12"
+  }
+}
+EOT
+cat <<EOT >server.js
+const functions = require('firebase-functions')
+const { default: next } = require('next')
+
+const isDev = process.env.NODE_ENV !== 'production'
+
+const server = next({
+  dev: isDev,
+  conf: { distDir: '.next' },
+})
+
+const nextjsHandle = server.getRequestHandler()
+
+exports.nextServer = functions
+  .runWith({
+    timeoutSeconds: 15,
+    memory: '128MB',
+  })
+  .https.onRequest((req, res) => {
+    return server.prepare().then(() => nextjsHandle(req, res))
+  })
+EOT
+
 git add .
 git commit -m "Inital boilerplate"
 git branch -M main
