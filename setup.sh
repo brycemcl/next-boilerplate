@@ -179,7 +179,7 @@ const fs = require('fs').promises
   const packageJson = await fs.readFile('./package.json', 'utf8')
   const package = JSON.parse(packageJson)
   package.scripts.export = 'next build && next export'
-  package.scripts.deploy = 'npm run export && mkdir firebaseBuild && cp server.js firebaseBuild/index.js && cp server.js firebaseBuild/index.js && cp package*.json firebaseBuild && cp -r .next firebaseBuild && cp -r public firebaseBuild && cross-env NODE_ENV=production firebase deploy --only functions,hosting && rm -fr firebaseBuild'
+  package.scripts.deploy = 'npm run export && mkdir firebaseBuild && cp server.js firebaseBuild/index.js && cp server.js firebaseBuild/index.js && cp package*.json firebaseBuild && cp -r .next firebaseBuild && cp -r public firebaseBuild && cross-env NODE_ENV=production firebase deploy --only functions,hosting ; rm -fr firebaseBuild'
   package.scripts.test = 'jest --watch'
   console.log(package)
   await fs.writeFile('./package.json', JSON.stringify(package))
