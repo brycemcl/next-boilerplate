@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 npx create-next-app $1
 cd $1
 npm i normalize.css
@@ -180,7 +181,6 @@ const fs = require('fs').promises
   package.scripts.export = 'next build && next export'
   package.scripts.deploy = 'npm run export && mkdir firebaseBuild && cp server.js firebaseBuild/index.js && cp server.js firebaseBuild/index.js && cp package*.json firebaseBuild && cp -r .next firebaseBuild && cp -r public firebaseBuild && cross-env NODE_ENV=production firebase deploy --only functions,hosting && rm -fr firebaseBuild'
   package.scripts.test = 'jest --watch'
-  package.main = 'server.js'
   console.log(package)
   await fs.writeFile('./package.json', JSON.stringify(package))
 })()
