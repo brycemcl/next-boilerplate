@@ -2,12 +2,16 @@
 npx create-next-app $1
 cd $1
 npm i normalize.css
-mkdir components
-mkdir components/atoms
-mkdir components/molecules
-mkdir components/organisms
-mkdir components/templates
-mkdir components/pages
+mkdir scr
+mkdir scr/atoms
+mkdir scr/molecules
+mkdir scr/organisms
+mkdir scr/templates
+mkdir scr/pages
+mkdir scr/functions
+mkdir scr/functions/getters
+mkdir scr/functions/setters
+mkdir scr/hooks
 
 cat <<EOT >styles/globals.css
 @import '../node_modules/normalize.css/normalize.css';
@@ -65,8 +69,8 @@ rm -fr stories
 cat <<EOT >.storybook/main.js
 module.exports = {
   stories: [
-    '../components/**/*.stories.mdx',
-    '../components/**/*.stories.@(js|jsx|ts|tsx)',
+    '../scr/**/*.stories.mdx',
+    '../scr/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',
@@ -75,46 +79,23 @@ module.exports = {
   ],
 }
 EOT
+cat <<EOT >.storybook/preview.js
+import '../styles/globals.css'
+export const parameters = {
+  actions: { argTypesRegex: '^on[A-Z].*' },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
+}
+EOT
 cat <<EOT >.storybook/storybook.test.js
 import initStoryshots from '@storybook/addon-storyshots'
 initStoryshots()
 EOT
 
-mkdir components/atoms/SampleTemplate
-touch components/atoms/SampleTemplate/styles.module.css
-
-cat <<EOT >components/atoms/SampleTemplate/index.stories.tsx
-import Component from '.'
-
-export default {
-  title: 'Atoms/Component',
-  component: Component,
-}
-const Template = (args) => <Component {...args} />
-
-export const standard = Template.bind({})
-standard.args = {}
-EOT
-cat <<EOT >components/atoms/SampleTemplate/index.test.tsx
-import { render } from '@testing-library/react'
-import Index from '.'
-
-test('renders', () => {
-  render(<Index />)
-})
-EOT
-cat <<EOT >components/atoms/SampleTemplate/index.tsx
-import index from "./SampleTemplate";
-export default index
-EOT
-cat <<EOT >components/atoms/SampleTemplate/SampleTemplate.tsx
-import '../../../styles/globals.css'
-import 'normalize.css'
-import styles from './styles.module.css'
-export default ({}) => {
-  return <></>
-}
-EOT
 rm README.md
 touch README.md
 
@@ -199,11 +180,12 @@ const fs = require('fs').promises
   const package = JSON.parse(packageJson)
   package.scripts.export = 'next export'
   package.scripts.test = 'jest --watch'
+  console.log(package)
   await fs.writeFile('./package.json', JSON.stringify(package))
 })()
 EOT
 node changePackageJson.js
 rm changePackageJson.js
 git add .
-git commit -m "inital boilerplate"
+git commit -m "Inital boilerplate"
 git branch -M main
