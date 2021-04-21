@@ -40,7 +40,7 @@ module.exports = {
   },
 }
 EOT
-
+npm i -D @babel/traverse@^7.13
 npm i -D typescript @types/react @types/node
 npm i -D @testing-library/react @types/jest babel-jest @testing-library/jest-dom @testing-library/user-event @testing-library/dom jest
 npm i -D identity-obj-proxy storybook-css-modules-preset
