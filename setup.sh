@@ -243,7 +243,7 @@ npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
 cat <<EOT >tailwind.config.js
 module.exports = {
   purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-  darkMode: media,
+  darkMode: false,
   theme: {
     extend: {},
   },
