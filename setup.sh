@@ -2,7 +2,6 @@
 set -e
 npx create-next-app $1
 cd $1
-npm i normalize.css
 mkdir scr
 mkdir scr/atoms
 mkdir scr/molecules
@@ -79,7 +78,6 @@ module.exports = {
 EOT
 cat <<EOT >.storybook/preview.js
 import '../styles/globals.css'
-import 'normalize.css'
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
@@ -129,7 +127,6 @@ export default page
 EOT
 cat <<EOT >pages/_app.tsx
 import '../styles/globals.css'
-import 'normalize.css'
 
 function App({ Component, pageProps }) {
   return <Component {...pageProps} />
@@ -146,13 +143,16 @@ EOT
 rm -fr styles
 mkdir styles
 cat <<EOT >styles/globals.css
-@import '../node_modules/normalize.css/normalize.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: 'Roboto', sans-serif;
+  overflow: hidden;
 }
 
 a {
@@ -166,6 +166,8 @@ a {
 #__next {
   min-height: 100vh;
   min-width: 100vw;
+  display: grid;
+  place-items: center;
 }
 EOT
 rm public/vercel.svg
@@ -237,6 +239,31 @@ exports.nextServer = functions
     return server.prepare().then(() => nextjsHandle(req, res))
   })
 EOT
+npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+cat <<EOT >tailwind.config.js
+module.exports = {
+  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  darkMode: media,
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+}
+EOT
+cat <<EOT >postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+EOT
+
+
+
 npx prettier --write .
 git add .
 git commit -m "Inital boilerplate"
