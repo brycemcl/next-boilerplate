@@ -2,16 +2,16 @@
 set -e
 npx create-next-app $1
 cd $1
-mkdir scr
-mkdir scr/atoms
-mkdir scr/molecules
-mkdir scr/organisms
-mkdir scr/templates
-mkdir scr/pages
-mkdir scr/functions
-mkdir scr/functions/getters
-mkdir scr/functions/setters
-mkdir scr/hooks
+mkdir src
+mkdir src/atoms
+mkdir src/molecules
+mkdir src/organisms
+mkdir src/templates
+mkdir src/pages
+mkdir src/functions
+mkdir src/functions/getters
+mkdir src/functions/setters
+mkdir src/hooks
 
 cat <<EOT >styles/globals.css
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
@@ -66,8 +66,8 @@ rm -fr stories
 cat <<EOT >.storybook/main.js
 module.exports = {
   stories: [
-    '../scr/**/*.stories.mdx',
-    '../scr/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/**/*.stories.mdx',
+    '../src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',
